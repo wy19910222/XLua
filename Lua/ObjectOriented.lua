@@ -19,7 +19,7 @@ function class(super)
             __index = function(t,k)
                 if k == "ctor" or k == "super" or k == "new" then
                     return nil
-                local ret = super[k]
+                local ret = class_type[k]
                 return ret
             end
         })
