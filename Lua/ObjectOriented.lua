@@ -3,7 +3,7 @@ function class(super)
     class_type.ctor = false
     class_type.super = super
     class_type.new = function(...)
-        local obj = {}
+        local obj = {class = class_type}
         do
             local create = function(c, ...)
                 if c.super then        
@@ -15,17 +15,19 @@ function class(super)
             end
             create(class_type,...)
         end
-        setmetatable(obj, {__index = class_type})
-        return obj
-    end
-
-    if super then
-        setmetatable(class_type, {__index = 
-            function(t,k)
+        setmetatable(obj, {
+            __index = function(t,k)
+                if k == "ctor" or k == "super" or k == "new" then
+                    return nil
                 local ret = super[k]
                 return ret
             end
         })
+        return obj
+    end
+
+    if super then
+        setmetatable(class_type, {__index = class_type.super})
     end
     return class_type
 end
