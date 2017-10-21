@@ -15,19 +15,19 @@ function class(super)
             end
             create(class_type,...)
         end
-        setmetatable(obj, {
-            __index = function(t,k)
-                if k == "ctor" or k == "super" or k == "new" then
-                    return nil
-                local ret = class_type[k]
+        __index = function(t,k)
+            if k == "ctor" or k == "super" or k == "new" then
+                return nil
+            local ret = class_type[k]
                 return ret
-            end
-        })
+        end
+        setmetatable(obj, obj)
         return obj
     end
 
     if super then
-        setmetatable(class_type, {__index = class_type.super})
+        class_type.__index = class_type.super
+        setmetatable(class_type, class_type)
     end
     return class_type
 end
